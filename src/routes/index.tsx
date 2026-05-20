@@ -1,12 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import {
   analisarDiagnostico,
   type DiagnosticResult,
   type PillarKey,
 } from "@/lib/diagnostico.functions";
 import { StepStaircase } from "@/components/StepStaircase";
+import { Apresentacao } from "@/components/Apresentacao";
+import { buildPresentation } from "@/lib/apresentacao";
+
 
 export const Route = createFileRoute("/")({
   component: Index,
