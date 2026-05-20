@@ -65,6 +65,26 @@ function Index() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<DiagnosticResult | null>(null);
+  const [tab, setTab] = useState<"diagnostico" | "apresentacao">("diagnostico");
+
+  const presentation = useMemo(
+    () =>
+      result
+        ? buildPresentation({
+            empresa: form.empresa,
+            setor: form.setor,
+            respostas: {
+              atrair: form.atrair,
+              vender: form.vender,
+              saber: form.saber,
+              potencializar: form.potencializar,
+            },
+            diagnostico: result,
+          })
+        : null,
+    [result, form],
+  );
+
 
   const canSubmit =
     form.atrair.trim().length > 20 &&
