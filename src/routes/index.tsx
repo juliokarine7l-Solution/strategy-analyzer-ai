@@ -228,6 +228,33 @@ function Index() {
       {/* RESULTADO */}
       {result && (
         <section id="resultado" className="border-b border-border bg-surface/40">
+          <div className="mx-auto max-w-6xl px-6 py-12">
+            {/* Tabs */}
+            <div className="flex gap-2 mb-8 border-b border-border">
+              {([
+                ["diagnostico", "Diagnóstico"],
+                ["apresentacao", "Apresentação"],
+              ] as const).map(([k, label]) => (
+                <button
+                  key={k}
+                  onClick={() => setTab(k)}
+                  className={`px-5 py-3 text-sm font-semibold uppercase tracking-wider transition border-b-2 -mb-px ${
+                    tab === k
+                      ? "border-brand text-brand"
+                      : "border-transparent text-muted-foreground hover:text-foreground"
+                  }`}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            {tab === "apresentacao" && presentation && <Apresentacao presentation={presentation} />}
+
+            {tab === "diagnostico" && (
+              <div className="space-y-12">
+                <header>
+
           <div className="mx-auto max-w-5xl px-6 py-16 space-y-12">
             <header>
               <span className="text-xs uppercase tracking-widest text-brand">Diagnóstico</span>
