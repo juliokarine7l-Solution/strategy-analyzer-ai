@@ -252,85 +252,85 @@ function Index() {
             {tab === "apresentacao" && presentation && <Apresentacao presentation={presentation} />}
 
             {tab === "diagnostico" && (
-              <div className="space-y-12">
+              <div className="max-w-5xl space-y-12">
                 <header>
+                  <span className="text-xs uppercase tracking-widest text-brand">Diagnóstico</span>
+                  <h2 className="mt-2 text-3xl md:text-4xl font-display uppercase">
+                    Fase atual: <span className="text-brand">{result.faseStep}</span>
+                  </h2>
+                  <p className="mt-3 max-w-3xl text-muted-foreground">{result.faseDescricao}</p>
+                </header>
 
-          <div className="mx-auto max-w-5xl px-6 py-16 space-y-12">
-            <header>
-              <span className="text-xs uppercase tracking-widest text-brand">Diagnóstico</span>
-              <h2 className="mt-2 text-3xl md:text-4xl font-display uppercase">
-                Fase atual: <span className="text-brand">{result.faseStep}</span>
-              </h2>
-              <p className="mt-3 max-w-3xl text-muted-foreground">{result.faseDescricao}</p>
-            </header>
-
-            {/* Pilares */}
-            <div>
-              <h3 className="text-xl font-display uppercase mb-4">📊 Diagnóstico por pilar</h3>
-              <div className="overflow-hidden rounded-lg border border-border">
-                <table className="w-full text-left text-sm">
-                  <thead className="bg-surface-elevated">
-                    <tr>
-                      <th className="px-4 py-3 font-semibold">Pilar</th>
-                      <th className="px-4 py-3 font-semibold w-32">Nota</th>
-                      <th className="px-4 py-3 font-semibold">Justificativa</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {(Object.keys(result.pilares) as PillarKey[]).map((k) => {
-                      const p = result.pilares[k];
-                      return (
-                        <tr key={k} className="border-t border-border">
-                          <td className="px-4 py-3 capitalize font-medium">{k}</td>
-                          <td className="px-4 py-3">
-                            <NotaBadge nota={p.nota} />
-                          </td>
-                          <td className="px-4 py-3 text-muted-foreground">{p.justificativa}</td>
+                {/* Pilares */}
+                <div>
+                  <h3 className="text-xl font-display uppercase mb-4">📊 Diagnóstico por pilar</h3>
+                  <div className="overflow-hidden rounded-lg border border-border">
+                    <table className="w-full text-left text-sm">
+                      <thead className="bg-surface-elevated">
+                        <tr>
+                          <th className="px-4 py-3 font-semibold">Pilar</th>
+                          <th className="px-4 py-3 font-semibold w-32">Nota</th>
+                          <th className="px-4 py-3 font-semibold">Justificativa</th>
                         </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
-              </div>
-            </div>
-
-            {/* Riscos */}
-            <div>
-              <h3 className="text-xl font-display uppercase mb-4">⚠️ Riscos identificados</h3>
-              <ul className="space-y-3">
-                {result.riscos.map((r, i) => (
-                  <li key={i} className="flex gap-3 rounded-md border border-border bg-surface p-4">
-                    <span className="text-brand font-mono">0{i + 1}</span>
-                    <span className="text-sm">{r}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Ações */}
-            <div>
-              <h3 className="text-xl font-display uppercase mb-2">🚀 Plano de ação</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                Pilar prioritário: <span className="text-brand font-semibold capitalize">{result.pilarPrioritario}</span>
-              </p>
-              <div className="grid gap-4 md:grid-cols-3">
-                {result.acoes.map((a, i) => (
-                  <div key={i} className="rounded-lg border border-border bg-surface p-5">
-                    <div className="text-xs uppercase tracking-widest text-brand">Prazo {a.prazo}</div>
-                    <p className="mt-2 text-sm">{a.acao}</p>
+                      </thead>
+                      <tbody>
+                        {(Object.keys(result.pilares) as PillarKey[]).map((k) => {
+                          const p = result.pilares[k];
+                          return (
+                            <tr key={k} className="border-t border-border">
+                              <td className="px-4 py-3 capitalize font-medium">{k}</td>
+                              <td className="px-4 py-3">
+                                <NotaBadge nota={p.nota} />
+                              </td>
+                              <td className="px-4 py-3 text-muted-foreground">{p.justificativa}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
                   </div>
-                ))}
-              </div>
-            </div>
+                </div>
 
-            {/* Parecer */}
-            <div className="rounded-lg border border-brand/40 bg-brand/10 p-6">
-              <h3 className="text-xl font-display uppercase mb-3">🎯 Parecer executivo global</h3>
-              <p className="text-base leading-relaxed">{result.parecerExecutivo}</p>
-            </div>
+                {/* Riscos */}
+                <div>
+                  <h3 className="text-xl font-display uppercase mb-4">⚠️ Riscos identificados</h3>
+                  <ul className="space-y-3">
+                    {result.riscos.map((r, i) => (
+                      <li key={i} className="flex gap-3 rounded-md border border-border bg-surface p-4">
+                        <span className="text-brand font-mono">0{i + 1}</span>
+                        <span className="text-sm">{r}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Ações */}
+                <div>
+                  <h3 className="text-xl font-display uppercase mb-2">🚀 Plano de ação</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Pilar prioritário: <span className="text-brand font-semibold capitalize">{result.pilarPrioritario}</span>
+                  </p>
+                  <div className="grid gap-4 md:grid-cols-3">
+                    {result.acoes.map((a, i) => (
+                      <div key={i} className="rounded-lg border border-border bg-surface p-5">
+                        <div className="text-xs uppercase tracking-widest text-brand">Prazo {a.prazo}</div>
+                        <p className="mt-2 text-sm">{a.acao}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Parecer */}
+                <div className="rounded-lg border border-brand/40 bg-brand/10 p-6">
+                  <h3 className="text-xl font-display uppercase mb-3">🎯 Parecer executivo global</h3>
+                  <p className="text-base leading-relaxed">{result.parecerExecutivo}</p>
+                </div>
+              </div>
+            )}
           </div>
         </section>
       )}
+
 
       <footer className="mx-auto max-w-6xl px-6 py-8 text-xs text-muted-foreground">
         Diagnóstico STEP · Análise gerada por IA com base nas suas respostas. Use como instrumento estratégico, não como substituto de auditoria financeira.
