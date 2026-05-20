@@ -11,7 +11,7 @@ export function StepStaircase({ currentPhase }: { currentPhase?: string }) {
     <div className="relative w-full overflow-x-auto">
       <div className="min-w-[720px] grid grid-cols-5 gap-3 items-end pt-8">
         {steps.map((s, i) => {
-          const heights = ["h-32", "h-44", "h-56", "h-68", "h-80"];
+          const heights = ["h-32", "h-44", "h-56", "h-72", "h-80"];
           const active = currentPhase?.toLowerCase() === s.verb.toLowerCase();
           return (
             <div key={s.num} className="flex flex-col items-stretch gap-3">
