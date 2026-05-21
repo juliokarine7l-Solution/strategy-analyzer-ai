@@ -9,6 +9,7 @@ import {
 import { StepStaircase } from "@/components/StepStaircase";
 import { Apresentacao } from "@/components/Apresentacao";
 import { buildPresentation } from "@/lib/apresentacao";
+import { StepConsultivo } from "@/components/StepConsultivo";
 
 
 export const Route = createFileRoute("/")({
