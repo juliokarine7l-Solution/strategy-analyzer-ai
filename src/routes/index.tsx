@@ -9,6 +9,7 @@ import {
 import { StepStaircase } from "@/components/StepStaircase";
 import { Apresentacao } from "@/components/Apresentacao";
 import { buildPresentation } from "@/lib/apresentacao";
+import { StepConsultivo } from "@/components/StepConsultivo";
 
 
 export const Route = createFileRoute("/")({
@@ -66,6 +67,7 @@ function Index() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<DiagnosticResult | null>(null);
   const [tab, setTab] = useState<"diagnostico" | "apresentacao">("diagnostico");
+  const [modo, setModo] = useState<"auto" | "consultivo">("auto");
 
   const presentation = useMemo(
     () =>
@@ -110,6 +112,31 @@ function Index() {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
+      {/* SELETOR DE MÓDULO */}
+      <div className="border-b border-border bg-surface/40">
+        <div className="mx-auto max-w-6xl px-6 py-3 flex gap-2 flex-wrap">
+          {([
+            ["auto", "Auto-diagnóstico"],
+            ["consultivo", "STEP · Consultivo"],
+          ] as const).map(([k, label]) => (
+            <button
+              key={k}
+              onClick={() => setModo(k)}
+              className={`px-4 py-2 text-xs uppercase tracking-wider rounded-md border transition ${
+                modo === k
+                  ? "border-brand bg-brand/10 text-brand"
+                  : "border-border text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {modo === "consultivo" && <StepConsultivo />}
+
+      {modo === "auto" && (<>
       {/* HERO */}
       <section className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,oklch(0.32_0.12_25/0.45),transparent_60%)] pointer-events-none" />
@@ -330,6 +357,7 @@ function Index() {
           </div>
         </section>
       )}
+      </>)}
 
 
       <footer className="mx-auto max-w-6xl px-6 py-8 text-xs text-muted-foreground">
