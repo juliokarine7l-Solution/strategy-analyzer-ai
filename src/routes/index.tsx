@@ -136,7 +136,7 @@ function Index() {
 
       {modo === "consultivo" && <StepConsultivo />}
 
-      {modo === "auto" && (<>
+      {modo === "auto" && (<div>
       {/* HERO */}
       <section className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,oklch(0.32_0.12_25/0.45),transparent_60%)] pointer-events-none" />
