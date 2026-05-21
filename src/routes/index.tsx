@@ -89,10 +89,11 @@ function Index() {
 
 
   const canSubmit =
-    form.atrair.trim().length > 20 &&
-    form.vender.trim().length > 20 &&
-    form.saber.trim().length > 20 &&
-    form.potencializar.trim().length > 20;
+    form.atrair.trim().length > 0 &&
+    form.vender.trim().length > 0 &&
+    form.saber.trim().length > 0 &&
+    form.potencializar.trim().length > 0;
+
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -136,7 +137,7 @@ function Index() {
 
       {modo === "consultivo" && <StepConsultivo />}
 
-      {modo === "auto" && (<>
+      {modo === "auto" && (<div>
       {/* HERO */}
       <section className="relative overflow-hidden border-b border-border">
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,oklch(0.32_0.12_25/0.45),transparent_60%)] pointer-events-none" />
@@ -357,7 +358,7 @@ function Index() {
           </div>
         </section>
       )}
-      </>)}
+      </div>)}
 
 
       <footer className="mx-auto max-w-6xl px-6 py-8 text-xs text-muted-foreground">
