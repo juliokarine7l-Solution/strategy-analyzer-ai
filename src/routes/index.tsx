@@ -357,7 +357,7 @@ function Index() {
           </div>
         </section>
       )}
-      </>)}
+      </div>)}
 
 
       <footer className="mx-auto max-w-6xl px-6 py-8 text-xs text-muted-foreground">
