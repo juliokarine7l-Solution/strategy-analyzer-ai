@@ -89,10 +89,11 @@ function Index() {
 
 
   const canSubmit =
-    form.atrair.trim().length > 20 &&
-    form.vender.trim().length > 20 &&
-    form.saber.trim().length > 20 &&
-    form.potencializar.trim().length > 20;
+    form.atrair.trim().length > 0 &&
+    form.vender.trim().length > 0 &&
+    form.saber.trim().length > 0 &&
+    form.potencializar.trim().length > 0;
+
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
