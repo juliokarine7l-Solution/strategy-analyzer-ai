@@ -84,18 +84,51 @@ function montarMailto(c: Cliente, corpo: string): string {
   return `mailto:${encodeURIComponent(c.email)}?${params.toString().replace(/\+/g, "%20")}`;
 }
 
-function montarGmailUrl(c: Cliente, corpo: string): string {
-  const assunto = `Formulário STEP — Diagnóstico Consultivo${
-    c.empresa ? ` · ${c.empresa}` : ""
-  }`;
+function montarGmailUrl(
+  c: Cliente,
+  corpo: string,
+  assuntoOverride?: string,
+): string {
+  const assunto =
+    assuntoOverride ??
+    `Formulário STEP — Diagnóstico Consultivo${
+      c.empresa ? ` · ${c.empresa}` : ""
+    }`;
   const params = new URLSearchParams({
     view: "cm",
     fs: "1",
+    tf: "1",
     to: c.email,
     su: assunto,
     body: corpo,
   });
-  return `https://mail.google.com/mail/?${params.toString()}`;
+  const remetente = (c.remetente || "").trim();
+  const authuser = remetente.includes("@") ? remetente : "juliokarine7l@gmail.com";
+  return `https://mail.google.com/mail/u/?authuser=${encodeURIComponent(authuser)}&${params.toString()}`;
+}
+
+function montarCorpoDiagnostico(c: Cliente, d: DiagnosticResult): string {
+  const saud = `Olá${c.nome ? `, ${c.nome}` : ""},\n\nSegue abaixo o diagnóstico executivo STEP${
+    c.empresa ? ` da ${c.empresa}` : ""
+  }, com base nas respostas enviadas.\n`;
+  const fase = `\n— FASE STEP: ${d.faseStep} —\n${d.faseDescricao}\n`;
+  const pilares =
+    `\n— MATURIDADE POR PILAR —\n` +
+    (Object.keys(d.pilares) as PillarKey[])
+      .map((k) => {
+        const p = d.pilares[k];
+        return `• ${k.toUpperCase()} — ${p.nota.toFixed(1)}/5\n  ${p.justificativa}`;
+      })
+      .join("\n");
+  const riscos =
+    `\n\n— RISCOS CRÍTICOS —\n` +
+    d.riscos.map((r, i) => `${i + 1}. ${r}`).join("\n");
+  const acoes =
+    `\n\n— PLANO DE AÇÃO (30 DIAS) —\n` +
+    d.acoes.map((a) => `• [${a.prazo}] ${a.acao}`).join("\n");
+  const parecer = `\n\n— PARECER EXECUTIVO —\n${d.parecerExecutivo}\n`;
+  const fim = `\nQualquer dúvida, respondo neste mesmo e-mail.\nAbraço.`;
+  return saud + fase + pilares + riscos + acoes + parecer + fim;
 }
 
 /** Heurística leve para separar respostas coladas em texto livre. */
@@ -471,17 +504,51 @@ export function StepConsultivo() {
             {/* 4. DIAGNÓSTICO */}
             {diag && (
               <div className="rounded-lg border border-brand/40 bg-surface p-6 space-y-6">
-                <div>
-                  <span className="text-xs uppercase tracking-widest text-brand">
-                    Diagnóstico
-                  </span>
-                  <h3 className="mt-1 text-2xl font-display uppercase">
-                    Fase: <span className="text-brand">{diag.faseStep}</span>
-                  </h3>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    {diag.faseDescricao}
-                  </p>
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <span className="text-xs uppercase tracking-widest text-brand">
+                      Diagnóstico
+                    </span>
+                    <h3 className="mt-1 text-2xl font-display uppercase">
+                      Fase: <span className="text-brand">{diag.faseStep}</span>
+                    </h3>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      {diag.faseDescricao}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <a
+                      href={
+                        podeGerarEmail
+                          ? montarGmailUrl(
+                              cliente,
+                              montarCorpoDiagnostico(cliente, diag),
+                              `Diagnóstico STEP${cliente.empresa ? ` · ${cliente.empresa}` : ""} — Fase ${diag.faseStep}`,
+                            )
+                          : undefined
+                      }
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-disabled={!podeGerarEmail}
+                      className={`rounded-md px-3 py-2 text-xs uppercase tracking-wider border ${
+                        podeGerarEmail
+                          ? "border-brand/60 bg-brand text-brand-foreground hover:opacity-90"
+                          : "border-border text-muted-foreground pointer-events-none opacity-50"
+                      }`}
+                    >
+                      Enviar diagnóstico no Gmail
+                    </a>
+                    <button
+                      onClick={() =>
+                        copiar(montarCorpoDiagnostico(cliente, diag), "diag")
+                      }
+                      className="rounded-md border border-border bg-surface-elevated px-3 py-2 text-xs uppercase tracking-wider hover:border-brand/60"
+                    >
+                      {copiado === "diag" ? "Copiado!" : "Copiar diagnóstico"}
+                    </button>
+                  </div>
                 </div>
+
 
                 <div className="grid gap-3 md:grid-cols-2">
                   {(Object.keys(diag.pilares) as PillarKey[]).map((k) => {
