@@ -504,17 +504,51 @@ export function StepConsultivo() {
             {/* 4. DIAGNÓSTICO */}
             {diag && (
               <div className="rounded-lg border border-brand/40 bg-surface p-6 space-y-6">
-                <div>
-                  <span className="text-xs uppercase tracking-widest text-brand">
-                    Diagnóstico
-                  </span>
-                  <h3 className="mt-1 text-2xl font-display uppercase">
-                    Fase: <span className="text-brand">{diag.faseStep}</span>
-                  </h3>
-                  <p className="mt-2 text-sm text-muted-foreground">
-                    {diag.faseDescricao}
-                  </p>
+                <div className="flex flex-wrap items-start justify-between gap-4">
+                  <div>
+                    <span className="text-xs uppercase tracking-widest text-brand">
+                      Diagnóstico
+                    </span>
+                    <h3 className="mt-1 text-2xl font-display uppercase">
+                      Fase: <span className="text-brand">{diag.faseStep}</span>
+                    </h3>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      {diag.faseDescricao}
+                    </p>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <a
+                      href={
+                        podeGerarEmail
+                          ? montarGmailUrl(
+                              cliente,
+                              montarCorpoDiagnostico(cliente, diag),
+                              `Diagnóstico STEP${cliente.empresa ? ` · ${cliente.empresa}` : ""} — Fase ${diag.faseStep}`,
+                            )
+                          : undefined
+                      }
+                      target="_blank"
+                      rel="noreferrer"
+                      aria-disabled={!podeGerarEmail}
+                      className={`rounded-md px-3 py-2 text-xs uppercase tracking-wider border ${
+                        podeGerarEmail
+                          ? "border-brand/60 bg-brand text-brand-foreground hover:opacity-90"
+                          : "border-border text-muted-foreground pointer-events-none opacity-50"
+                      }`}
+                    >
+                      Enviar diagnóstico no Gmail
+                    </a>
+                    <button
+                      onClick={() =>
+                        copiar(montarCorpoDiagnostico(cliente, diag), "diag")
+                      }
+                      className="rounded-md border border-border bg-surface-elevated px-3 py-2 text-xs uppercase tracking-wider hover:border-brand/60"
+                    >
+                      {copiado === "diag" ? "Copiado!" : "Copiar diagnóstico"}
+                    </button>
+                  </div>
                 </div>
+
 
                 <div className="grid gap-3 md:grid-cols-2">
                   {(Object.keys(diag.pilares) as PillarKey[]).map((k) => {
