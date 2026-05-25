@@ -139,6 +139,19 @@ function Index() {
 
       {modo === "consultivo" && <StepConsultivo />}
 
+      {modo === "apresentacao" && (
+        <ApresentacaoTab
+          empresa={aprCliente.empresa}
+          setor={aprCliente.setor}
+          onChange={setAprCliente}
+          presentation={
+            presentation ??
+            buildPlaceholderPresentation(aprCliente.empresa || form.empresa, aprCliente.setor || form.setor)
+          }
+          temDiagnostico={!!presentation}
+        />
+      )}
+
       {modo === "auto" && (<div>
       {/* HERO */}
       <section className="relative overflow-hidden border-b border-border">
