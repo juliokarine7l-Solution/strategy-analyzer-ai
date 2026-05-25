@@ -120,6 +120,7 @@ function Index() {
           {([
             ["auto", "Auto-diagnóstico"],
             ["consultivo", "STEP · Consultivo"],
+            ["apresentacao", "Apresentação"],
           ] as const).map(([k, label]) => (
             <button
               key={k}
