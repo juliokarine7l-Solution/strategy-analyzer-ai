@@ -404,3 +404,93 @@ function NotaBadge({ nota }: { nota: number }) {
     </span>
   );
 }
+
+function ApresentacaoTab({
+  empresa,
+  setor,
+  onChange,
+  presentation,
+  temDiagnostico,
+}: {
+  empresa: string;
+  setor: string;
+  onChange: (v: { empresa: string; setor: string }) => void;
+  presentation: ReturnType<typeof buildPresentation>;
+  temDiagnostico: boolean;
+}) {
+  const palette = paletteFromName(empresa || presentation.title);
+  return (
+    <section className="border-b border-border">
+      <div className="mx-auto max-w-6xl px-6 py-10 space-y-8">
+        <header className="flex flex-wrap items-end justify-between gap-6">
+          <div>
+            <span className="text-xs uppercase tracking-widest text-brand">Módulo</span>
+            <h2 className="mt-2 text-3xl md:text-4xl font-display uppercase">Apresentação Executiva</h2>
+            <p className="mt-2 max-w-2xl text-sm text-muted-foreground">
+              Slides de performance nível Gamma/PowerPoint, com fundo e paleta gerados
+              automaticamente a partir do nome do cliente. Edite, visualize e exporte em PDF,
+              PowerPoint, JSON ou Outline.
+            </p>
+          </div>
+          <div
+            className="rounded-lg border p-4 min-w-56"
+            style={{
+              borderColor: palette.accent,
+              background: `linear-gradient(135deg, ${palette.surface}, ${palette.background})`,
+              color: palette.text,
+            }}
+          >
+            <div className="text-[10px] uppercase tracking-widest opacity-70">Identidade gerada</div>
+            <div className="mt-1 font-display text-xl" style={{ color: palette.accent }}>
+              {empresa || "Cliente"}
+            </div>
+            <div className="mt-2 flex gap-1">
+              {[palette.background, palette.surface, palette.accent].map((c) => (
+                <span
+                  key={c}
+                  title={c}
+                  style={{ background: c }}
+                  className="h-5 w-10 rounded border border-white/10"
+                />
+              ))}
+            </div>
+          </div>
+        </header>
+
+        <div className="grid gap-4 md:grid-cols-2">
+          <label className="block">
+            <div className="text-sm font-semibold uppercase tracking-wider">Nome do cliente</div>
+            <input
+              className="input mt-2"
+              placeholder="Ex.: Acme Industries"
+              value={empresa}
+              onChange={(e) => onChange({ empresa: e.target.value, setor })}
+            />
+          </label>
+          <label className="block">
+            <div className="text-sm font-semibold uppercase tracking-wider">Setor</div>
+            <input
+              className="input mt-2"
+              placeholder="Ex.: Automação industrial B2B"
+              value={setor}
+              onChange={(e) => onChange({ empresa, setor: e.target.value })}
+            />
+          </label>
+        </div>
+
+        {!temDiagnostico && (
+          <div className="rounded-md border border-amber-500/40 bg-amber-500/10 p-4 text-sm">
+            <strong className="uppercase tracking-wider text-amber-300">Modo preview</strong>
+            <p className="mt-1 text-muted-foreground">
+              Você está vendo uma apresentação placeholder com a identidade do cliente.
+              Para popular os slides com diagnóstico real, use o Auto-diagnóstico ou o
+              STEP · Consultivo e volte a esta aba.
+            </p>
+          </div>
+        )}
+
+        <Apresentacao presentation={presentation} />
+      </div>
+    </section>
+  );
+}
