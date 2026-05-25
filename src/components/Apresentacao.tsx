@@ -336,7 +336,7 @@ export function Apresentacao({ presentation }: { presentation: Presentation }) {
       >
         {draft.slides.map((s, i) => (
           <div key={s.id} data-pdf-slide>
-            <PdfSlide slide={s} index={i} total={draft.slides.length} brand={draft.title} scale="full" />
+            <PdfSlide slide={s} index={i} total={draft.slides.length} brand={draft.title} palette={draft.brandStyle.palette} scale="full" />
           </div>
         ))}
       </div>
