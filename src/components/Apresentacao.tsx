@@ -81,9 +81,25 @@ export function Apresentacao({ presentation }: { presentation: Presentation }) {
       pptx.title = draft.title;
       pptx.subject = draft.subtitle;
 
-      const BG = "1A0808";
-      const BG2 = "2A0E0E";
-      const BRAND = "E63946";
+      const hexFromCss = (css: string, fallback: string) => {
+        if (!css) return fallback;
+        if (css.startsWith("#")) return css.replace("#", "").slice(0, 6).toUpperCase();
+        // hsl(h s% l%) → render via canvas to extract rgb
+        try {
+          const c = document.createElement("canvas");
+          c.width = c.height = 1;
+          const ctx = c.getContext("2d")!;
+          ctx.fillStyle = css;
+          ctx.fillRect(0, 0, 1, 1);
+          const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+          return [r, g, b].map((v) => v.toString(16).padStart(2, "0")).join("").toUpperCase();
+        } catch {
+          return fallback;
+        }
+      };
+      const BG = hexFromCss(draft.brandStyle.palette.background, "1A0808");
+      const BG2 = hexFromCss(draft.brandStyle.palette.surface, "2A0E0E");
+      const BRAND = hexFromCss(draft.brandStyle.palette.accent, "E63946");
       const TEXT = "FAFAFA";
       const MUTED = "BDB5B5";
       const DIM = "8B7A7A";
