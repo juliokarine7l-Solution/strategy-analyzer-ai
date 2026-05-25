@@ -8,7 +8,7 @@ import {
 } from "@/lib/diagnostico.functions";
 import { StepStaircase } from "@/components/StepStaircase";
 import { Apresentacao } from "@/components/Apresentacao";
-import { buildPresentation } from "@/lib/apresentacao";
+import { buildPresentation, buildPlaceholderPresentation, paletteFromName } from "@/lib/apresentacao";
 import { StepConsultivo } from "@/components/StepConsultivo";
 
 
