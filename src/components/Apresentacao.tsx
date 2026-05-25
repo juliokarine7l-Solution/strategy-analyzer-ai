@@ -291,6 +291,7 @@ export function Apresentacao({ presentation }: { presentation: Presentation }) {
             index={idx}
             total={draft.slides.length}
             brand={draft.title}
+            palette={draft.brandStyle.palette}
             scale="responsive"
           />
         </div>
