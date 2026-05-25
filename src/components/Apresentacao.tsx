@@ -51,7 +51,7 @@ export function Apresentacao({ presentation }: { presentation: Presentation }) {
       );
       for (let i = 0; i < nodes.length; i++) {
         const canvas = await html2canvas(nodes[i], {
-          backgroundColor: "#1a0808",
+          backgroundColor: draft.brandStyle.palette.background,
           scale: 1,
           width: 1920,
           height: 1080,
