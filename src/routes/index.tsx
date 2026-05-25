@@ -67,7 +67,8 @@ function Index() {
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<DiagnosticResult | null>(null);
   const [tab, setTab] = useState<"diagnostico" | "apresentacao">("diagnostico");
-  const [modo, setModo] = useState<"auto" | "consultivo">("auto");
+  const [modo, setModo] = useState<"auto" | "consultivo" | "apresentacao">("auto");
+  const [aprCliente, setAprCliente] = useState({ empresa: "", setor: "" });
 
   const presentation = useMemo(
     () =>
