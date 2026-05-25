@@ -453,29 +453,35 @@ function PdfSlide({
   index,
   total,
   brand,
+  palette,
   scale,
 }: {
   slide: Slide;
   index: number;
   total: number;
   brand: string;
+  palette: { background: string; surface: string; accent: string; text: string };
   scale: "full" | "responsive";
 }) {
   const isFull = scale === "full";
+  // Vary radial accent per slide to add visual rhythm (top-left/top-right/bottom-right/bottom-left)
+  const positions = ["20% 0%", "80% 0%", "100% 100%", "0% 100%"];
+  const pos = positions[index % positions.length];
   const root: React.CSSProperties = {
     width: isFull ? 1920 : "100%",
     height: isFull ? 1080 : "100%",
     padding: isFull ? 96 : "clamp(20px, 4vw, 60px)",
-    background: "linear-gradient(135deg, #2a0e0e 0%, #1a0808 100%)",
-    color: "#fafafa",
+    background: `radial-gradient(ellipse at ${pos}, ${palette.surface} 0%, ${palette.background} 60%)`,
+    color: palette.text,
     fontFamily: "Inter, system-ui, sans-serif",
     display: "flex",
     flexDirection: "column",
     boxSizing: "border-box",
+    position: "relative",
   };
 
   const f = (px: number) => (isFull ? `${px}px` : `clamp(${px * 0.35}px, ${(px / 1920) * 100}vw, ${px}px)`);
-  const brandColor = "#e63946";
+  const brandColor = palette.accent;
 
   return (
     <div style={root}>
