@@ -240,15 +240,99 @@ export function buildPresentation({ empresa, setor, respostas, diagnostico }: Bu
     subtitle: `Maturidade B2B · Fase ${fase}`,
     audience: "Executivos C-level e liderança comercial/marketing",
     brandStyle: {
-      palette: {
-        background: "#1f0a0a",
-        surface: "#2a0e0e",
-        accent: "#e63946",
-        text: "#fafafa",
-      },
+      palette: paletteFromName(empresaNome),
       fontDisplay: "Anton",
       fontBody: "Inter",
       tone: "Executivo, clínico, direto.",
+    },
+    slides,
+  };
+}
+
+/** Paleta determinística (bg/surface/accent/text) derivada do nome do cliente. */
+export function paletteFromName(name: string): {
+  background: string;
+  surface: string;
+  accent: string;
+  text: string;
+} {
+  const seed = (name || "Cliente").trim().toLowerCase();
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  const hue = h % 360;
+  const accentHue = (hue + 18) % 360;
+  return {
+    background: `hsl(${hue} 55% 8%)`,
+    surface: `hsl(${hue} 50% 14%)`,
+    accent: `hsl(${accentHue} 78% 56%)`,
+    text: "#fafafa",
+  };
+}
+
+/** Apresentação placeholder personalizada pelo nome do cliente. */
+export function buildPlaceholderPresentation(empresa: string, setor?: string): Presentation {
+  const empresaNome = empresa?.trim() || "Cliente B2B";
+  const setorTxt = setor?.trim() || "[setor não informado]";
+  const slides: Slide[] = [
+    {
+      id: "p01-cover",
+      type: "cover",
+      title: `Apresentação Executiva — ${empresaNome}`,
+      subtitle: `Análise de Performance B2B · ${setorTxt}`,
+      keyPoints: [
+        "Capa personalizada com paleta derivada do nome do cliente.",
+        "Preencha o auto-diagnóstico ou o STEP Consultivo para popular todos os slides.",
+        "Exportações PDF, PowerPoint, JSON e Outline já estão disponíveis.",
+      ],
+      metrics: [],
+      charts: [],
+      recommendations: [],
+      visualNotes: "Capa em paleta dinâmica.",
+    },
+    {
+      id: "p02-context",
+      type: "context",
+      title: "Contexto do cliente",
+      subtitle: `${empresaNome} · ${setorTxt}`,
+      keyPoints: [
+        "Avaliação STEP: Saber, Ter, Executar, Performar.",
+        "Métricas serão preenchidas após o diagnóstico.",
+      ],
+      metrics: [
+        { label: "Cliente", value: empresaNome },
+        { label: "Setor", value: setorTxt },
+        { label: "Status", value: "Aguardando", hint: "rodar diagnóstico" },
+      ],
+      charts: [],
+      recommendations: [],
+      visualNotes: "Slide de contexto.",
+    },
+    {
+      id: "p03-next",
+      type: "action-plan",
+      title: "Próximos passos",
+      subtitle: "Como ativar a análise completa",
+      keyPoints: [
+        "1. Volte ao módulo Auto-diagnóstico ou STEP Consultivo.",
+        "2. Responda aos 4 pilares com dados específicos.",
+        "3. Retorne aqui para gerar e exportar a apresentação final.",
+      ],
+      metrics: [],
+      charts: [],
+      recommendations: [],
+      visualNotes: "Lista numerada.",
+    },
+  ];
+
+  return {
+    title: `Apresentação — ${empresaNome}`,
+    subtitle: `Performance B2B · ${setorTxt}`,
+    audience: "Executivos C-level",
+    brandStyle: {
+      palette: paletteFromName(empresaNome),
+      fontDisplay: "Anton",
+      fontBody: "Inter",
+      tone: "Executivo, moderno, personalizado.",
     },
     slides,
   };
