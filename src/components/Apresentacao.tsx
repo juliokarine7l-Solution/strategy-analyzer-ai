@@ -51,7 +51,7 @@ export function Apresentacao({ presentation }: { presentation: Presentation }) {
       );
       for (let i = 0; i < nodes.length; i++) {
         const canvas = await html2canvas(nodes[i], {
-          backgroundColor: "#1a0808",
+          backgroundColor: draft.brandStyle.palette.background,
           scale: 1,
           width: 1920,
           height: 1080,
@@ -81,9 +81,25 @@ export function Apresentacao({ presentation }: { presentation: Presentation }) {
       pptx.title = draft.title;
       pptx.subject = draft.subtitle;
 
-      const BG = "1A0808";
-      const BG2 = "2A0E0E";
-      const BRAND = "E63946";
+      const hexFromCss = (css: string, fallback: string) => {
+        if (!css) return fallback;
+        if (css.startsWith("#")) return css.replace("#", "").slice(0, 6).toUpperCase();
+        // hsl(h s% l%) → render via canvas to extract rgb
+        try {
+          const c = document.createElement("canvas");
+          c.width = c.height = 1;
+          const ctx = c.getContext("2d")!;
+          ctx.fillStyle = css;
+          ctx.fillRect(0, 0, 1, 1);
+          const [r, g, b] = ctx.getImageData(0, 0, 1, 1).data;
+          return [r, g, b].map((v) => v.toString(16).padStart(2, "0")).join("").toUpperCase();
+        } catch {
+          return fallback;
+        }
+      };
+      const BG = hexFromCss(draft.brandStyle.palette.background, "1A0808");
+      const BG2 = hexFromCss(draft.brandStyle.palette.surface, "2A0E0E");
+      const BRAND = hexFromCss(draft.brandStyle.palette.accent, "E63946");
       const TEXT = "FAFAFA";
       const MUTED = "BDB5B5";
       const DIM = "8B7A7A";
@@ -275,6 +291,7 @@ export function Apresentacao({ presentation }: { presentation: Presentation }) {
             index={idx}
             total={draft.slides.length}
             brand={draft.title}
+            palette={draft.brandStyle.palette}
             scale="responsive"
           />
         </div>
@@ -319,7 +336,7 @@ export function Apresentacao({ presentation }: { presentation: Presentation }) {
       >
         {draft.slides.map((s, i) => (
           <div key={s.id} data-pdf-slide>
-            <PdfSlide slide={s} index={i} total={draft.slides.length} brand={draft.title} scale="full" />
+            <PdfSlide slide={s} index={i} total={draft.slides.length} brand={draft.title} palette={draft.brandStyle.palette} scale="full" />
           </div>
         ))}
       </div>
@@ -436,29 +453,35 @@ function PdfSlide({
   index,
   total,
   brand,
+  palette,
   scale,
 }: {
   slide: Slide;
   index: number;
   total: number;
   brand: string;
+  palette: { background: string; surface: string; accent: string; text: string };
   scale: "full" | "responsive";
 }) {
   const isFull = scale === "full";
+  // Vary radial accent per slide to add visual rhythm (top-left/top-right/bottom-right/bottom-left)
+  const positions = ["20% 0%", "80% 0%", "100% 100%", "0% 100%"];
+  const pos = positions[index % positions.length];
   const root: React.CSSProperties = {
     width: isFull ? 1920 : "100%",
     height: isFull ? 1080 : "100%",
     padding: isFull ? 96 : "clamp(20px, 4vw, 60px)",
-    background: "linear-gradient(135deg, #2a0e0e 0%, #1a0808 100%)",
-    color: "#fafafa",
+    background: `radial-gradient(ellipse at ${pos}, ${palette.surface} 0%, ${palette.background} 60%)`,
+    color: palette.text,
     fontFamily: "Inter, system-ui, sans-serif",
     display: "flex",
     flexDirection: "column",
     boxSizing: "border-box",
+    position: "relative",
   };
 
   const f = (px: number) => (isFull ? `${px}px` : `clamp(${px * 0.35}px, ${(px / 1920) * 100}vw, ${px}px)`);
-  const brandColor = "#e63946";
+  const brandColor = palette.accent;
 
   return (
     <div style={root}>
